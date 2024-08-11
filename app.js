@@ -10,11 +10,16 @@ document.addEventListener("DOMContentLoaded",()=>{
     const minMaxTemp = document.querySelector (".min-max-temp")
     const humidity = document.querySelector (".humidity")
     const container = document.querySelector('.container')
+    const loading = document.querySelector(".loading")
+    const content = document.querySelector(".content")
     let error = false
-    
+    const weatherIcon = document.querySelector (".weatherIcon")
     
     
     button.addEventListener("click",async ()=>{
+    content.classList.add("hidden")
+    container.classList.remove("hidden")
+    loading.classList.remove("hidden")
     
         const cityName = document.querySelector(".cityName").value
         document.querySelector(".cityName").value=""
@@ -34,6 +39,9 @@ document.addEventListener("DOMContentLoaded",()=>{
             }
             catch(error){
                 console.error(error)
+            }finally{
+                loading.classList.add('hidden')
+                content.classList.remove("hidden")
             }
         }
         else{
@@ -58,7 +66,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     }
     
     function displayWeatherInfo(data){
-        
+        weatherIcon.innerHTML=getWeatherIcon(data)
         name.innerHTML=(data.name+", "+ data.sys.country)
         temp.innerHTML=(data.main.temp+"°C")
         description.innerHTML=(data.weather[0].description)
@@ -73,6 +81,23 @@ document.addEventListener("DOMContentLoaded",()=>{
         errorMessage.innerHTML=message
         container.appendChild(errorMessage)
     
+    }
+    
+    const getWeatherIcon = (data)=>{
+       let iconId = data.weather[0].id
+       
+        switch(true){
+            case (iconId>=300 && iconId<400):
+            return "🌧"
+            case (iconId>=600 && iconId<700):
+            return "🌨"
+            case (iconId>800):
+            return "☁"
+            case (iconId>=500 && iconId<600):
+            return "🌧"
+            case(iconId===800):
+            return "☀"
+        }
     }
         
         
